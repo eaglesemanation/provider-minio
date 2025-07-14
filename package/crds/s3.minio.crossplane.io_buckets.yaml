@@ -77,11 +77,6 @@ spec:
                       (String) Bucket's Access Control List (default: private)
                       Bucket's Access Control List (default: private)
                     type: string
-                  bucket:
-                    description: |-
-                      (String) Name of the bucket
-                      Name of the bucket
-                    type: string
                   bucketPrefix:
                     description: |-
                       (String) Prefix of the bucket
@@ -120,11 +115,6 @@ spec:
                     description: |-
                       (String) Bucket's Access Control List (default: private)
                       Bucket's Access Control List (default: private)
-                    type: string
-                  bucket:
-                    description: |-
-                      (String) Name of the bucket
-                      Name of the bucket
                     type: string
                   bucketPrefix:
                     description: |-
@@ -328,11 +318,6 @@ spec:
                     description: |-
                       (String) ARN of the bucket
                       ARN of the bucket
-                    type: string
-                  bucket:
-                    description: |-
-                      (String) Name of the bucket
-                      Name of the bucket
                     type: string
                   bucketDomainName:
                     description: |-

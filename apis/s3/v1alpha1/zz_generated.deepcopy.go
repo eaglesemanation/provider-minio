@@ -47,11 +47,6 @@ func (in *BucketInitParameters) DeepCopyInto(out *BucketInitParameters) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.Bucket != nil {
-		in, out := &in.Bucket, &out.Bucket
-		*out = new(string)
-		**out = **in
-	}
 	if in.BucketPrefix != nil {
 		in, out := &in.BucketPrefix, &out.BucketPrefix
 		*out = new(string)
@@ -129,11 +124,6 @@ func (in *BucketObservation) DeepCopyInto(out *BucketObservation) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.Bucket != nil {
-		in, out := &in.Bucket, &out.Bucket
-		*out = new(string)
-		**out = **in
-	}
 	if in.BucketDomainName != nil {
 		in, out := &in.BucketDomainName, &out.BucketDomainName
 		*out = new(string)
@@ -181,11 +171,6 @@ func (in *BucketParameters) DeepCopyInto(out *BucketParameters) {
 	*out = *in
 	if in.ACL != nil {
 		in, out := &in.ACL, &out.ACL
-		*out = new(string)
-		**out = **in
-	}
-	if in.Bucket != nil {
-		in, out := &in.Bucket, &out.Bucket
 		*out = new(string)
 		**out = **in
 	}

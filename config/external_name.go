@@ -11,9 +11,9 @@ import "github.com/crossplane/upjet/pkg/config"
 var ExternalNameConfigs = map[string]config.ExternalName{
 	"minio_accesskey":                  config.IdentifierFromProvider,
 	"minio_iam_policy":                 config.IdentifierFromProvider,
-	"minio_iam_user":                   config.IdentifierFromProvider,
+	"minio_iam_user":                   config.NameAsIdentifier,
 	"minio_iam_user_policy_attachment": config.IdentifierFromProvider,
-	"minio_s3_bucket":                  config.IdentifierFromProvider,
+	"minio_s3_bucket":                  config.NameAsIdentifier,
 }
 
 // ExternalNameConfigurations applies all external name configs listed in the

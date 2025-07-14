@@ -9,4 +9,3 @@ metadata:
 spec:
   forProvider:
     acl: public
-    bucket: state-terraform-s3

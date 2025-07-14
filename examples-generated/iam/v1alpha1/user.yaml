@@ -9,6 +9,5 @@ metadata:
 spec:
   forProvider:
     forceDestroy: true
-    name: test
     tags:
       tag-key: tag-value

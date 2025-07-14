@@ -19,10 +19,6 @@ type BucketInitParameters struct {
 	// Bucket's Access Control List (default: private)
 	ACL *string `json:"acl,omitempty" tf:"acl,omitempty"`
 
-	// (String) Name of the bucket
-	// Name of the bucket
-	Bucket *string `json:"bucket,omitempty" tf:"bucket,omitempty"`
-
 	// (String) Prefix of the bucket
 	// Prefix of the bucket
 	BucketPrefix *string `json:"bucketPrefix,omitempty" tf:"bucket_prefix,omitempty"`
@@ -49,10 +45,6 @@ type BucketObservation struct {
 	// (String) ARN of the bucket
 	// ARN of the bucket
 	Arn *string `json:"arn,omitempty" tf:"arn,omitempty"`
-
-	// (String) Name of the bucket
-	// Name of the bucket
-	Bucket *string `json:"bucket,omitempty" tf:"bucket,omitempty"`
 
 	// (String) The bucket domain name
 	// The bucket domain name
@@ -84,11 +76,6 @@ type BucketParameters struct {
 	// Bucket's Access Control List (default: private)
 	// +kubebuilder:validation:Optional
 	ACL *string `json:"acl,omitempty" tf:"acl,omitempty"`
-
-	// (String) Name of the bucket
-	// Name of the bucket
-	// +kubebuilder:validation:Optional
-	Bucket *string `json:"bucket,omitempty" tf:"bucket,omitempty"`
 
 	// (String) Prefix of the bucket
 	// Prefix of the bucket

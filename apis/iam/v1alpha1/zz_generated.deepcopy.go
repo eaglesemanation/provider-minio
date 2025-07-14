@@ -242,11 +242,6 @@ func (in *UserInitParameters) DeepCopyInto(out *UserInitParameters) {
 		*out = new(bool)
 		**out = **in
 	}
-	if in.Name != nil {
-		in, out := &in.Name, &out.Name
-		*out = new(string)
-		**out = **in
-	}
 	if in.SecretSecretRef != nil {
 		in, out := &in.SecretSecretRef, &out.SecretSecretRef
 		*out = new(v1.SecretKeySelector)
@@ -335,11 +330,6 @@ func (in *UserObservation) DeepCopyInto(out *UserObservation) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.Name != nil {
-		in, out := &in.Name, &out.Name
-		*out = new(string)
-		**out = **in
-	}
 	if in.Status != nil {
 		in, out := &in.Status, &out.Status
 		*out = new(string)
@@ -389,11 +379,6 @@ func (in *UserParameters) DeepCopyInto(out *UserParameters) {
 	if in.ForceDestroy != nil {
 		in, out := &in.ForceDestroy, &out.ForceDestroy
 		*out = new(bool)
-		**out = **in
-	}
-	if in.Name != nil {
-		in, out := &in.Name, &out.Name
-		*out = new(string)
 		**out = **in
 	}
 	if in.SecretSecretRef != nil {

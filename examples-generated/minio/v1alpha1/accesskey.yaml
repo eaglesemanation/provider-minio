@@ -23,5 +23,4 @@ metadata:
     testing.upbound.io/example-name: example_user
   name: example-user
 spec:
-  forProvider:
-    name: example-user
+  forProvider: {}
