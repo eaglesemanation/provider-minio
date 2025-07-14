@@ -13,7 +13,7 @@ import (
 
 // Package type metadata.
 const (
-	Group   = "minio.minio.crossplane.io"
+	Group   = "minio.crossplane.io"
 	Version = "v1alpha1"
 )
 

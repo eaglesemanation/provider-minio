@@ -1,0 +1,24 @@
+apiVersion: iam.minio.crossplane.io/v1alpha1
+kind: Policy
+metadata:
+  annotations:
+    meta.upbound.io/example-id: iam/v1alpha1/policy
+  labels:
+    testing.upbound.io/example-name: test_policy
+  name: test-policy
+spec:
+  forProvider:
+    name: state-terraform-s3
+    policy: |
+      {
+        "Version":"2012-10-17",
+        "Statement": [
+          {
+            "Sid":"ListAllBucket",
+            "Effect": "Allow",
+            "Action": ["s3:PutObject"],
+            "Principal":"*",
+            "Resource": "arn:aws:s3:::state-terraform-s3/*"
+          }
+        ]
+      }

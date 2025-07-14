@@ -14,6 +14,19 @@ import (
 type ProviderConfigSpec struct {
 	// Credentials required to authenticate to this provider.
 	Credentials ProviderCredentials `json:"credentials"`
+
+	// Minio Host and Port. It must be provided, but it can also be sourced from the MINIO_ENDPOINT environment variable
+	// +optional
+	Server *string `json:"server,omitempty"`
+	// Minio Region (default: us-east-1)
+	// +optional
+	Region *string `json:"region,omitempty"`
+	// Minio API Version (options: v2 or v4, default: v4)
+	// +optional
+	APIVersion *string `json:"api_version,omitempty"`
+	// Minio SSL enabled (default: false). It can also be sourced from the MINIO_ENABLE_HTTPS environment variable
+	// +optional
+	SSL *bool `json:"ssl,omitempty"`
 }
 
 // ProviderCredentials required to authenticate.

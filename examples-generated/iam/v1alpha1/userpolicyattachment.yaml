@@ -1,0 +1,57 @@
+apiVersion: iam.minio.crossplane.io/v1alpha1
+kind: UserPolicyAttachment
+metadata:
+  annotations:
+    meta.upbound.io/example-id: iam/v1alpha1/userpolicyattachment
+  labels:
+    testing.upbound.io/example-name: developer
+  name: developer
+spec:
+  forProvider:
+    policySelector:
+      matchLabels:
+        testing.upbound.io/example-name: test_policy
+    userSelector:
+      matchLabels:
+        testing.upbound.io/example-name: test_user
+
+---
+
+apiVersion: iam.minio.crossplane.io/v1alpha1
+kind: Policy
+metadata:
+  annotations:
+    meta.upbound.io/example-id: iam/v1alpha1/userpolicyattachment
+  labels:
+    testing.upbound.io/example-name: test_policy
+  name: test-policy
+spec:
+  forProvider:
+    name: state-terraform-s3
+    policy: |
+      {
+        "Version":"2012-10-17",
+        "Statement": [
+          {
+            "Sid":"ListAllBucket",
+            "Effect": "Allow",
+            "Action": ["s3:PutObject"],
+            "Principal":"*",
+            "Resource": "arn:aws:s3:::state-terraform-s3/*"
+          }
+        ]
+      }
+
+---
+
+apiVersion: iam.minio.crossplane.io/v1alpha1
+kind: User
+metadata:
+  annotations:
+    meta.upbound.io/example-id: iam/v1alpha1/userpolicyattachment
+  labels:
+    testing.upbound.io/example-name: test_user
+  name: test-user
+spec:
+  forProvider:
+    name: test-user

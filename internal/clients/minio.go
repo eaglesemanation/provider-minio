@@ -62,11 +62,26 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 			return ps, errors.Wrap(err, errUnmarshalCredentials)
 		}
 
-		// Set credentials in Terraform provider configuration.
-		/*ps.Configuration = map[string]any{
-			"username": creds["username"],
-			"password": creds["password"],
-		}*/
+		ps.Configuration = map[string]any{}
+		if v, ok := creds["user"]; ok {
+			ps.Configuration["minio_user"] = v
+		}
+		if v, ok := creds["password"]; ok {
+			ps.Configuration["minio_password"] = v
+		}
+		if pc.Spec.Server != nil {
+			ps.Configuration["minio_server"] = *pc.Spec.Server
+		}
+		if pc.Spec.Region != nil {
+			ps.Configuration["minio_region"] = *pc.Spec.Region
+		}
+		if pc.Spec.APIVersion != nil {
+			ps.Configuration["minio_api_version"] = *pc.Spec.APIVersion
+		}
+		if pc.Spec.SSL != nil {
+			ps.Configuration["minio_ssl"] = *pc.Spec.SSL
+		}
+
 		return ps, nil
 	}
 }

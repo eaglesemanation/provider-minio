@@ -10,7 +10,9 @@ import (
 
 	ujconfig "github.com/crossplane/upjet/pkg/config"
 
-	"github.com/eaglesemanation/provider-minio/config/null"
+	"github.com/eaglesemanation/provider-minio/config/accesskey"
+	"github.com/eaglesemanation/provider-minio/config/iam"
+	"github.com/eaglesemanation/provider-minio/config/s3"
 )
 
 const (
@@ -36,7 +38,9 @@ func GetProvider() *ujconfig.Provider {
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		null.Configure,
+		accesskey.Configure,
+		s3.Configure,
+		iam.Configure,
 	} {
 		configure(pc)
 	}

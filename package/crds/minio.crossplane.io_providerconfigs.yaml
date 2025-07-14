@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: providerconfigs.minio.upbound.io
+  name: providerconfigs.minio.crossplane.io
 spec:
-  group: minio.upbound.io
+  group: minio.crossplane.io
   names:
     categories:
     - crossplane
@@ -51,6 +51,9 @@ spec:
           spec:
             description: A ProviderConfigSpec defines the desired state of a ProviderConfig.
             properties:
+              api_version:
+                description: 'Minio API Version (options: v2 or v4, default: v4)'
+                type: string
               credentials:
                 description: Credentials required to authenticate to this provider.
                 properties:
@@ -107,6 +110,17 @@ spec:
                 required:
                 - source
                 type: object
+              region:
+                description: 'Minio Region (default: us-east-1)'
+                type: string
+              server:
+                description: Minio Host and Port. It must be provided, but it can
+                  also be sourced from the MINIO_ENDPOINT environment variable
+                type: string
+              ssl:
+                description: 'Minio SSL enabled (default: false). It can also be sourced
+                  from the MINIO_ENABLE_HTTPS environment variable'
+                type: boolean
             required:
             - credentials
             type: object

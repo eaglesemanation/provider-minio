@@ -9,16 +9,24 @@ import (
 
 	"github.com/crossplane/upjet/pkg/controller"
 
-	resource "github.com/eaglesemanation/provider-minio/internal/controller/null/resource"
+	policy "github.com/eaglesemanation/provider-minio/internal/controller/iam/policy"
+	user "github.com/eaglesemanation/provider-minio/internal/controller/iam/user"
+	userpolicyattachment "github.com/eaglesemanation/provider-minio/internal/controller/iam/userpolicyattachment"
+	accesskey "github.com/eaglesemanation/provider-minio/internal/controller/minio/accesskey"
 	providerconfig "github.com/eaglesemanation/provider-minio/internal/controller/providerconfig"
+	bucket "github.com/eaglesemanation/provider-minio/internal/controller/s3/bucket"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
 // the supplied manager.
 func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		resource.Setup,
+		policy.Setup,
+		user.Setup,
+		userpolicyattachment.Setup,
+		accesskey.Setup,
 		providerconfig.Setup,
+		bucket.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err
