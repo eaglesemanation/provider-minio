@@ -15,11 +15,15 @@ on:
 jobs:
   publish-provider-package:
     uses: crossplane-contrib/provider-workflows/.github/workflows/publish-provider-non-family.yml@main
+    permissions:
+      contents: read
+      packages: write
     with:
       repository: provider-minio
       version: ${{ github.event.inputs.version }}
       go-version: ${{ github.event.inputs.go-version }}
       cleanup-disk: true
+      registry_org: eaglesemanation
     secrets:
       GHCR_PAT: ${{ secrets.GITHUB_TOKEN }}
       XPKG_MIRROR_TOKEN: ${{ secrets.XPKG_MIRROR_TOKEN }}
