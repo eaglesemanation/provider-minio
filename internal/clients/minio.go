@@ -63,17 +63,17 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 		if v, ok := creds["password"]; ok {
 			ps.Configuration["minio_password"] = v
 		}
-		if pc.Spec.Server != nil {
-			ps.Configuration["minio_server"] = *pc.Spec.Server
+		if pcSpec.Server != nil {
+			ps.Configuration["minio_server"] = *pcSpec.Server
 		}
-		if pc.Spec.Region != nil {
-			ps.Configuration["minio_region"] = *pc.Spec.Region
+		if pcSpec.Region != nil {
+			ps.Configuration["minio_region"] = *pcSpec.Region
 		}
-		if pc.Spec.APIVersion != nil {
-			ps.Configuration["minio_api_version"] = *pc.Spec.APIVersion
+		if pcSpec.APIVersion != nil {
+			ps.Configuration["minio_api_version"] = *pcSpec.APIVersion
 		}
-		if pc.Spec.SSL != nil {
-			ps.Configuration["minio_ssl"] = *pc.Spec.SSL
+		if pcSpec.SSL != nil {
+			ps.Configuration["minio_ssl"] = *pcSpec.SSL
 		}
 
 		return ps, nil
