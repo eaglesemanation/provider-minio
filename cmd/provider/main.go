@@ -34,14 +34,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/controller-runtime/pkg/metrics"
 
+	apisCluster "github.com/crossplane/upjet-provider-template/apis/cluster"
+	apisNamespaced "github.com/crossplane/upjet-provider-template/apis/namespaced"
+	controllerCluster "github.com/crossplane/upjet-provider-template/internal/controller/cluster"
+	controllerNamespaced "github.com/crossplane/upjet-provider-template/internal/controller/namespaced"
+	"github.com/crossplane/upjet-provider-template/internal/version"
 	"github.com/eaglesemanation/provider-minio/config"
 	"github.com/eaglesemanation/provider-minio/internal/clients"
 	"github.com/eaglesemanation/provider-minio/internal/features"
-	apisCluster "github.com/upbound/upjet-provider-template/apis/cluster"
-	apisNamespaced "github.com/upbound/upjet-provider-template/apis/namespaced"
-	controllerCluster "github.com/upbound/upjet-provider-template/internal/controller/cluster"
-	controllerNamespaced "github.com/upbound/upjet-provider-template/internal/controller/namespaced"
-	"github.com/upbound/upjet-provider-template/internal/version"
 )
 
 const (

@@ -1,0 +1,28 @@
+apiVersion: minio.m.crossplane.io/v1alpha1
+kind: AccessKey
+metadata:
+  annotations:
+    meta.upbound.io/example-id: minio/v1alpha1/accesskey
+  labels:
+    testing.upbound.io/example-name: example
+  name: example
+  namespace: upbound-system
+spec:
+  forProvider:
+    userSelector:
+      matchLabels:
+        testing.upbound.io/example-name: example_user
+
+---
+
+apiVersion: iam.minio.m.crossplane.io/v1alpha1
+kind: User
+metadata:
+  annotations:
+    meta.upbound.io/example-id: /v1alpha1/accesskey
+  labels:
+    testing.upbound.io/example-name: example_user
+  name: example-user
+  namespace: upbound-system
+spec:
+  forProvider: {}

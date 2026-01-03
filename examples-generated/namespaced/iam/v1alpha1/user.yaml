@@ -1,0 +1,14 @@
+apiVersion: iam.minio.m.crossplane.io/v1alpha1
+kind: User
+metadata:
+  annotations:
+    meta.upbound.io/example-id: iam/v1alpha1/user
+  labels:
+    testing.upbound.io/example-name: test
+  name: test
+  namespace: upbound-system
+spec:
+  forProvider:
+    forceDestroy: true
+    tags:
+      tag-key: tag-value

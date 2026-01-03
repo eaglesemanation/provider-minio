@@ -23,6 +23,7 @@ func (mg *UserPolicyAttachment) ResolveReferences(ctx context.Context, c client.
 	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.PolicyName),
 		Extract:      reference.ExternalName(),
+		Namespace:    mg.GetNamespace(),
 		Reference:    mg.Spec.ForProvider.PolicyRef,
 		Selector:     mg.Spec.ForProvider.PolicySelector,
 		To: reference.To{
@@ -39,6 +40,7 @@ func (mg *UserPolicyAttachment) ResolveReferences(ctx context.Context, c client.
 	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.UserName),
 		Extract:      reference.ExternalName(),
+		Namespace:    mg.GetNamespace(),
 		Reference:    mg.Spec.ForProvider.UserRef,
 		Selector:     mg.Spec.ForProvider.UserSelector,
 		To: reference.To{
@@ -55,6 +57,7 @@ func (mg *UserPolicyAttachment) ResolveReferences(ctx context.Context, c client.
 	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 		CurrentValue: reference.FromPtrValue(mg.Spec.InitProvider.PolicyName),
 		Extract:      reference.ExternalName(),
+		Namespace:    mg.GetNamespace(),
 		Reference:    mg.Spec.InitProvider.PolicyRef,
 		Selector:     mg.Spec.InitProvider.PolicySelector,
 		To: reference.To{
@@ -71,6 +74,7 @@ func (mg *UserPolicyAttachment) ResolveReferences(ctx context.Context, c client.
 	rsp, err = r.Resolve(ctx, reference.ResolutionRequest{
 		CurrentValue: reference.FromPtrValue(mg.Spec.InitProvider.UserName),
 		Extract:      reference.ExternalName(),
+		Namespace:    mg.GetNamespace(),
 		Reference:    mg.Spec.InitProvider.UserRef,
 		Selector:     mg.Spec.InitProvider.UserSelector,
 		To: reference.To{

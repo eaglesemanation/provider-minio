@@ -17,7 +17,7 @@ type UserPolicyAttachmentInitParameters struct {
 
 	// (String) Name of policy to attach to user
 	// Name of policy to attach to user
-	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/iam/v1alpha1.Policy
+	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/cluster/iam/v1alpha1.Policy
 	// +crossplane:generate:reference:refFieldName=PolicyRef
 	// +crossplane:generate:reference:selectorFieldName=PolicySelector
 	PolicyName *string `json:"policyName,omitempty" tf:"policy_name,omitempty"`
@@ -32,7 +32,7 @@ type UserPolicyAttachmentInitParameters struct {
 
 	// (String) Name of user
 	// Name of user
-	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/iam/v1alpha1.User
+	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/cluster/iam/v1alpha1.User
 	// +crossplane:generate:reference:refFieldName=UserRef
 	// +crossplane:generate:reference:selectorFieldName=UserSelector
 	UserName *string `json:"userName,omitempty" tf:"user_name,omitempty"`
@@ -64,7 +64,7 @@ type UserPolicyAttachmentParameters struct {
 
 	// (String) Name of policy to attach to user
 	// Name of policy to attach to user
-	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/iam/v1alpha1.Policy
+	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/cluster/iam/v1alpha1.Policy
 	// +crossplane:generate:reference:refFieldName=PolicyRef
 	// +crossplane:generate:reference:selectorFieldName=PolicySelector
 	// +kubebuilder:validation:Optional
@@ -80,7 +80,7 @@ type UserPolicyAttachmentParameters struct {
 
 	// (String) Name of user
 	// Name of user
-	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/iam/v1alpha1.User
+	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/cluster/iam/v1alpha1.User
 	// +crossplane:generate:reference:refFieldName=UserRef
 	// +crossplane:generate:reference:selectorFieldName=UserSelector
 	// +kubebuilder:validation:Optional

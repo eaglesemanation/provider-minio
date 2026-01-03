@@ -1,0 +1,12 @@
+apiVersion: s3.minio.m.crossplane.io/v1alpha1
+kind: Bucket
+metadata:
+  annotations:
+    meta.upbound.io/example-id: s3/v1alpha1/bucket
+  labels:
+    testing.upbound.io/example-name: state_terraform_s3
+  name: state-terraform-s3
+  namespace: upbound-system
+spec:
+  forProvider:
+    acl: public
