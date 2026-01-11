@@ -6,9 +6,9 @@ require (
 	dario.cat/mergo v1.0.2
 	github.com/crossplane/crossplane-runtime/v2 v2.1.0
 	github.com/crossplane/crossplane-tools v0.0.0-20251017183449-dd4517244339
-	github.com/crossplane/upjet-provider-template v0.0.0-20251217190853-7f457455a70f
 	github.com/crossplane/upjet/v2 v2.2.0
 	github.com/pkg/errors v0.9.1
+	google.golang.org/grpc v1.72.1
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	k8s.io/api v0.34.3
 	k8s.io/apiextensions-apiserver v0.34.3
@@ -120,7 +120,6 @@ require (
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250303144028-a0af3efb3deb // indirect
-	google.golang.org/grpc v1.72.1 // indirect
 	google.golang.org/protobuf v1.36.7 // indirect
 	gopkg.in/evanphx/json-patch.v4 v4.12.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
