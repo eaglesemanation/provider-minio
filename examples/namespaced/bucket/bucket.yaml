@@ -1,0 +1,10 @@
+apiVersion: s3.minio.m.crossplane.io/v1alpha1
+kind: Bucket
+metadata:
+  name: test-bucket
+  namespace: crossplane-system
+spec:
+  forProvider: {}
+  providerConfigRef:
+    kind: ProviderConfig
+    name: minio

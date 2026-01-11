@@ -1,0 +1,14 @@
+apiVersion: minio.m.crossplane.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: minio
+  namespace: crossplane-system
+spec:
+  credentials:
+    secretRef:
+      key: credentials
+      name: minio-creds
+      namespace: crossplane-system
+    source: Secret
+  server: minio.crossplane-system.svc.cluster.local:9000
+  ssl: false
