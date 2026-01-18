@@ -24,8 +24,8 @@ type BucketInitParameters struct {
 	// Prefix of the bucket
 	BucketPrefix *string `json:"bucketPrefix,omitempty" tf:"bucket_prefix,omitempty"`
 
-	// (Boolean) Force destroy the bucket (default: false)
-	// Force destroy the bucket (default: false)
+	// (Boolean) A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
+	// A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
 	ForceDestroy *bool `json:"forceDestroy,omitempty" tf:"force_destroy,omitempty"`
 
 	// (Boolean) Enable object locking for the bucket (default: false)
@@ -35,6 +35,11 @@ type BucketInitParameters struct {
 	// (Number) Quota of the bucket
 	// Quota of the bucket
 	Quota *float64 `json:"quota,omitempty" tf:"quota,omitempty"`
+
+	// (Map of String) A map of tags to assign to the bucket
+	// A map of tags to assign to the bucket
+	// +mapType=granular
+	Tags map[string]*string `json:"tags,omitempty" tf:"tags,omitempty"`
 }
 
 type BucketObservation struct {
@@ -55,8 +60,8 @@ type BucketObservation struct {
 	// Prefix of the bucket
 	BucketPrefix *string `json:"bucketPrefix,omitempty" tf:"bucket_prefix,omitempty"`
 
-	// (Boolean) Force destroy the bucket (default: false)
-	// Force destroy the bucket (default: false)
+	// (Boolean) A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
+	// A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
 	ForceDestroy *bool `json:"forceDestroy,omitempty" tf:"force_destroy,omitempty"`
 
 	// (String) The ID of this resource.
@@ -69,6 +74,11 @@ type BucketObservation struct {
 	// (Number) Quota of the bucket
 	// Quota of the bucket
 	Quota *float64 `json:"quota,omitempty" tf:"quota,omitempty"`
+
+	// (Map of String) A map of tags to assign to the bucket
+	// A map of tags to assign to the bucket
+	// +mapType=granular
+	Tags map[string]*string `json:"tags,omitempty" tf:"tags,omitempty"`
 }
 
 type BucketParameters struct {
@@ -83,8 +93,8 @@ type BucketParameters struct {
 	// +kubebuilder:validation:Optional
 	BucketPrefix *string `json:"bucketPrefix,omitempty" tf:"bucket_prefix,omitempty"`
 
-	// (Boolean) Force destroy the bucket (default: false)
-	// Force destroy the bucket (default: false)
+	// (Boolean) A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
+	// A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
 	// +kubebuilder:validation:Optional
 	ForceDestroy *bool `json:"forceDestroy,omitempty" tf:"force_destroy,omitempty"`
 
@@ -97,6 +107,12 @@ type BucketParameters struct {
 	// Quota of the bucket
 	// +kubebuilder:validation:Optional
 	Quota *float64 `json:"quota,omitempty" tf:"quota,omitempty"`
+
+	// (Map of String) A map of tags to assign to the bucket
+	// A map of tags to assign to the bucket
+	// +kubebuilder:validation:Optional
+	// +mapType=granular
+	Tags map[string]*string `json:"tags,omitempty" tf:"tags,omitempty"`
 }
 
 // BucketSpec defines the desired state of Bucket

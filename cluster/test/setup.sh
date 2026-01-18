@@ -2,29 +2,13 @@
 set -aeuo pipefail
 
 echo "Running setup.sh"
-echo "Creating cloud credential secret..."
-${KUBECTL} -n upbound-system create secret generic provider-secret --from-literal=credentials="${UPTEST_CLOUD_CREDENTIALS}" --dry-run=client -o yaml | ${KUBECTL} apply -f -
 
-echo "Waiting until provider is healthy..."
-${KUBECTL} wait provider.pkg --all --for condition=Healthy --timeout 5m
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+PROVIDER_DIR=$( readlink -f "$SCRIPT_DIR/../.." )
 
-echo "Waiting for all pods to come online..."
-${KUBECTL} -n upbound-system wait --for=condition=Available deployment --all --timeout=5m
+echo "Creating minio deployment"
+${KUBECTL} -n crossplane-system apply -f "$PROVIDER_DIR/examples/namespaced/providerconfig/minio.yaml"
 
-echo "Creating a default provider config..."
-cat <<EOF | ${KUBECTL} apply -f -
-apiVersion: minio.crossplane.io/v1beta1
-kind: ProviderConfig
-metadata:
-  name: default
-spec:
-  credentials:
-    source: Secret
-    secretRef:
-      name: provider-secret
-      namespace: upbound-system
-      key: credentials
-EOF
-
-${KUBECTL} wait provider.pkg --all --for condition=Healthy --timeout 5m
-${KUBECTL} -n upbound-system wait --for=condition=Available deployment --all --timeout=5m
+echo "Creating default provider"
+${KUBECTL} -n crossplane-system apply -f "$PROVIDER_DIR/examples/namespaced/providerconfig/providerconfig.yaml"
+${KUBECTL} -n crossplane-system wait --for=condition=Available deployment --all --timeout=5m

@@ -16,70 +16,73 @@ import (
 
 type UserInitParameters struct {
 
-	// (Boolean) Disable user access. Defaults to false.
+	// (Boolean) Disable user
 	// Disable user
 	DisableUser *bool `json:"disableUser,omitempty" tf:"disable_user,omitempty"`
 
-	// When true, any group memberships will be removed during deletion even if they cause errors
+	// provider-managed iam access keys
+	// delete user even if it has non-provider-managed iam access keys
 	ForceDestroy *bool `json:"forceDestroy,omitempty" tf:"force_destroy,omitempty"`
 
-	// (String, Sensitive) The user's secret key. If not provided, one will be generated. Can be updated.
+	// (String, Sensitive)
 	SecretSecretRef *v1.LocalSecretKeySelector `json:"secretSecretRef,omitempty" tf:"-"`
 
-	// value map of tags.
+	// (Map of String)
 	// +mapType=granular
 	Tags map[string]*string `json:"tags,omitempty" tf:"tags,omitempty"`
 
-	// (Boolean) When true, generates a new secret key for the user. Defaults to false.
+	// (Boolean) Rotate Minio User Secret Key
 	// Rotate Minio User Secret Key
 	UpdateSecret *bool `json:"updateSecret,omitempty" tf:"update_secret,omitempty"`
 }
 
 type UserObservation struct {
 
-	// (Boolean) Disable user access. Defaults to false.
+	// (Boolean) Disable user
 	// Disable user
 	DisableUser *bool `json:"disableUser,omitempty" tf:"disable_user,omitempty"`
 
-	// When true, any group memberships will be removed during deletion even if they cause errors
+	// provider-managed iam access keys
+	// delete user even if it has non-provider-managed iam access keys
 	ForceDestroy *bool `json:"forceDestroy,omitempty" tf:"force_destroy,omitempty"`
 
-	// (String) The ID of this resource (same as name).
+	// (String) The ID of this resource.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
-	// (String) Current status of the user (enabled/disabled).
+	// (String)
 	Status *string `json:"status,omitempty" tf:"status,omitempty"`
 
-	// value map of tags.
+	// (Map of String)
 	// +mapType=granular
 	Tags map[string]*string `json:"tags,omitempty" tf:"tags,omitempty"`
 
-	// (Boolean) When true, generates a new secret key for the user. Defaults to false.
+	// (Boolean) Rotate Minio User Secret Key
 	// Rotate Minio User Secret Key
 	UpdateSecret *bool `json:"updateSecret,omitempty" tf:"update_secret,omitempty"`
 }
 
 type UserParameters struct {
 
-	// (Boolean) Disable user access. Defaults to false.
+	// (Boolean) Disable user
 	// Disable user
 	// +kubebuilder:validation:Optional
 	DisableUser *bool `json:"disableUser,omitempty" tf:"disable_user,omitempty"`
 
-	// When true, any group memberships will be removed during deletion even if they cause errors
+	// provider-managed iam access keys
+	// delete user even if it has non-provider-managed iam access keys
 	// +kubebuilder:validation:Optional
 	ForceDestroy *bool `json:"forceDestroy,omitempty" tf:"force_destroy,omitempty"`
 
-	// (String, Sensitive) The user's secret key. If not provided, one will be generated. Can be updated.
+	// (String, Sensitive)
 	// +kubebuilder:validation:Optional
 	SecretSecretRef *v1.LocalSecretKeySelector `json:"secretSecretRef,omitempty" tf:"-"`
 
-	// value map of tags.
+	// (Map of String)
 	// +kubebuilder:validation:Optional
 	// +mapType=granular
 	Tags map[string]*string `json:"tags,omitempty" tf:"tags,omitempty"`
 
-	// (Boolean) When true, generates a new secret key for the user. Defaults to false.
+	// (Boolean) Rotate Minio User Secret Key
 	// Rotate Minio User Secret Key
 	// +kubebuilder:validation:Optional
 	UpdateSecret *bool `json:"updateSecret,omitempty" tf:"update_secret,omitempty"`

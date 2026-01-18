@@ -74,7 +74,7 @@ spec:
                 properties:
                   accessKeySecretRef:
                     description: |-
-                      The access key value. If omitted, MinIO generates one. Must be 8-20 characters when specified.
+                      (String) The access key. If provided, must be between 8 and 20 characters.
                       The access key. If provided, must be between 8 and 20 characters.
                     properties:
                       key:
@@ -91,15 +91,20 @@ spec:
                     - name
                     - namespace
                     type: object
+                  description:
+                    description: |-
+                      (String) Description for the access key (max 256 characters).
+                      Description for the access key (max 256 characters).
+                    type: string
                   policy:
                     description: |-
-                      The policy to attach to the access key. Can be a policy name, a JSON document, or the contents of a file (e.g., file("path/to/policy.json")).
+                      (String) Policy to attach to the access key (policy name or JSON document).
                       Policy to attach to the access key (policy name or JSON document).
                     type: string
                   secretKeySecretRef:
                     description: |-
-                      The secret key value. If omitted, MinIO generates one. Must be at least 8 characters when specified.
-                      The secret key. If provided, must be at least 8 characters.
+                      only field and will not be stored in state.
+                      The secret key. If provided, must be at least 8 characters. This is a write-only field and will not be stored in state.
                     properties:
                       key:
                         description: The key to select.
@@ -115,14 +120,19 @@ spec:
                     - name
                     - namespace
                     type: object
+                  secretKeyVersion:
+                    description: |-
+                      (String) Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
+                      Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
+                    type: string
                   status:
                     description: |-
-                      The status of the access key (enabled or disabled). Defaults to enabled.
+                      (String) The status of the access key (enabled/disabled).
                       The status of the access key (enabled/disabled).
                     type: string
                   user:
                     description: |-
-                      The MinIO user for whom the access key is managed.
+                      (String) The user for whom the access key is managed.
                       The user for whom the access key is managed.
                     type: string
                   userRef:
@@ -215,7 +225,7 @@ spec:
                 properties:
                   accessKeySecretRef:
                     description: |-
-                      The access key value. If omitted, MinIO generates one. Must be 8-20 characters when specified.
+                      (String) The access key. If provided, must be between 8 and 20 characters.
                       The access key. If provided, must be between 8 and 20 characters.
                     properties:
                       key:
@@ -232,15 +242,20 @@ spec:
                     - name
                     - namespace
                     type: object
+                  description:
+                    description: |-
+                      (String) Description for the access key (max 256 characters).
+                      Description for the access key (max 256 characters).
+                    type: string
                   policy:
                     description: |-
-                      The policy to attach to the access key. Can be a policy name, a JSON document, or the contents of a file (e.g., file("path/to/policy.json")).
+                      (String) Policy to attach to the access key (policy name or JSON document).
                       Policy to attach to the access key (policy name or JSON document).
                     type: string
                   secretKeySecretRef:
                     description: |-
-                      The secret key value. If omitted, MinIO generates one. Must be at least 8 characters when specified.
-                      The secret key. If provided, must be at least 8 characters.
+                      only field and will not be stored in state.
+                      The secret key. If provided, must be at least 8 characters. This is a write-only field and will not be stored in state.
                     properties:
                       key:
                         description: The key to select.
@@ -256,14 +271,19 @@ spec:
                     - name
                     - namespace
                     type: object
+                  secretKeyVersion:
+                    description: |-
+                      (String) Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
+                      Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
+                    type: string
                   status:
                     description: |-
-                      The status of the access key (enabled or disabled). Defaults to enabled.
+                      (String) The status of the access key (enabled/disabled).
                       The status of the access key (enabled/disabled).
                     type: string
                   user:
                     description: |-
-                      The MinIO user for whom the access key is managed.
+                      (String) The user for whom the access key is managed.
                       The user for whom the access key is managed.
                     type: string
                   userRef:
@@ -432,22 +452,32 @@ spec:
             properties:
               atProvider:
                 properties:
+                  description:
+                    description: |-
+                      (String) Description for the access key (max 256 characters).
+                      Description for the access key (max 256 characters).
+                    type: string
                   id:
-                    description: The access key ID.
+                    description: (String) The ID of this resource.
                     type: string
                   policy:
                     description: |-
-                      The policy to attach to the access key. Can be a policy name, a JSON document, or the contents of a file (e.g., file("path/to/policy.json")).
+                      (String) Policy to attach to the access key (policy name or JSON document).
                       Policy to attach to the access key (policy name or JSON document).
+                    type: string
+                  secretKeyVersion:
+                    description: |-
+                      (String) Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
+                      Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
                     type: string
                   status:
                     description: |-
-                      The status of the access key (enabled or disabled). Defaults to enabled.
+                      (String) The status of the access key (enabled/disabled).
                       The status of the access key (enabled/disabled).
                     type: string
                   user:
                     description: |-
-                      The MinIO user for whom the access key is managed.
+                      (String) The user for whom the access key is managed.
                       The user for whom the access key is managed.
                     type: string
                 type: object

@@ -84,8 +84,8 @@ spec:
                     type: string
                   forceDestroy:
                     description: |-
-                      (Boolean) Force destroy the bucket (default: false)
-                      Force destroy the bucket (default: false)
+                      (Boolean) A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
+                      A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
                     type: boolean
                   objectLocking:
                     description: |-
@@ -97,6 +97,14 @@ spec:
                       (Number) Quota of the bucket
                       Quota of the bucket
                     type: number
+                  tags:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      (Map of String) A map of tags to assign to the bucket
+                      A map of tags to assign to the bucket
+                    type: object
+                    x-kubernetes-map-type: granular
                 type: object
               initProvider:
                 description: |-
@@ -123,8 +131,8 @@ spec:
                     type: string
                   forceDestroy:
                     description: |-
-                      (Boolean) Force destroy the bucket (default: false)
-                      Force destroy the bucket (default: false)
+                      (Boolean) A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
+                      A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
                     type: boolean
                   objectLocking:
                     description: |-
@@ -136,6 +144,14 @@ spec:
                       (Number) Quota of the bucket
                       Quota of the bucket
                     type: number
+                  tags:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      (Map of String) A map of tags to assign to the bucket
+                      A map of tags to assign to the bucket
+                    type: object
+                    x-kubernetes-map-type: granular
                 type: object
               managementPolicies:
                 default:
@@ -250,8 +266,8 @@ spec:
                     type: string
                   forceDestroy:
                     description: |-
-                      (Boolean) Force destroy the bucket (default: false)
-                      Force destroy the bucket (default: false)
+                      (Boolean) A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
+                      A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
                     type: boolean
                   id:
                     description: (String) The ID of this resource.
@@ -266,6 +282,14 @@ spec:
                       (Number) Quota of the bucket
                       Quota of the bucket
                     type: number
+                  tags:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      (Map of String) A map of tags to assign to the bucket
+                      A map of tags to assign to the bucket
+                    type: object
+                    x-kubernetes-map-type: granular
                 type: object
               conditions:
                 description: Conditions of the resource.

@@ -12,7 +12,7 @@ TERRAFORM_VERSION_VALID := $(shell [ "$(TERRAFORM_VERSION)" = "`printf "$(TERRAF
 
 export TERRAFORM_PROVIDER_SOURCE ?= aminueza/minio
 export TERRAFORM_PROVIDER_REPO ?= https://github.com/aminueza/terraform-provider-minio
-export TERRAFORM_PROVIDER_VERSION ?= 3.6.0
+export TERRAFORM_PROVIDER_VERSION ?= 3.13.0
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME ?= terraform-provider-minio
 export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= $(TERRAFORM_PROVIDER_REPO)/releases/download/v$(TERRAFORM_PROVIDER_VERSION)
 export TERRAFORM_NATIVE_PROVIDER_BINARY ?= $(TERRAFORM_PROVIDER_DOWNLOAD_NAME)_v$(TERRAFORM_PROVIDER_VERSION)
@@ -54,12 +54,12 @@ GO_SUBDIRS += cmd internal apis
 # ====================================================================================
 # Setup Kubernetes tools
 
-KIND_VERSION = v0.30.0
-UPTEST_VERSION = v0.5.0
+KIND_VERSION = v0.31.0
+UPTEST_VERSION = v2.2.0
 CRDDIFF_VERSION = v0.12.1
-CROSSPLANE_CLI_VERSION = v2.1.1
+CROSSPLANE_CLI_VERSION = v2.1.3
 # for e2e testing
-CROSSPLANE_VERSION = 2.1.1
+CROSSPLANE_VERSION = 2.1.3
 -include build/makelib/k8s_tools.mk
 
 # ====================================================================================

@@ -15,23 +15,31 @@ import (
 
 type AccessKeyInitParameters struct {
 
-	// The access key value. If omitted, MinIO generates one. Must be 8-20 characters when specified.
+	// (String) The access key. If provided, must be between 8 and 20 characters.
 	// The access key. If provided, must be between 8 and 20 characters.
 	AccessKeySecretRef *v1.SecretKeySelector `json:"accessKeySecretRef,omitempty" tf:"-"`
 
-	// The policy to attach to the access key. Can be a policy name, a JSON document, or the contents of a file (e.g., file("path/to/policy.json")).
+	// (String) Description for the access key (max 256 characters).
+	// Description for the access key (max 256 characters).
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (String) Policy to attach to the access key (policy name or JSON document).
 	// Policy to attach to the access key (policy name or JSON document).
 	Policy *string `json:"policy,omitempty" tf:"policy,omitempty"`
 
-	// The secret key value. If omitted, MinIO generates one. Must be at least 8 characters when specified.
-	// The secret key. If provided, must be at least 8 characters.
+	// only field and will not be stored in state.
+	// The secret key. If provided, must be at least 8 characters. This is a write-only field and will not be stored in state.
 	SecretKeySecretRef *v1.SecretKeySelector `json:"secretKeySecretRef,omitempty" tf:"-"`
 
-	// The status of the access key (enabled or disabled). Defaults to enabled.
+	// (String) Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
+	// Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
+	SecretKeyVersion *string `json:"secretKeyVersion,omitempty" tf:"secret_key_version,omitempty"`
+
+	// (String) The status of the access key (enabled/disabled).
 	// The status of the access key (enabled/disabled).
 	Status *string `json:"status,omitempty" tf:"status,omitempty"`
 
-	// The MinIO user for whom the access key is managed.
+	// (String) The user for whom the access key is managed.
 	// The user for whom the access key is managed.
 	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/cluster/iam/v1alpha1.User
 	// +crossplane:generate:reference:refFieldName=UserRef
@@ -49,45 +57,63 @@ type AccessKeyInitParameters struct {
 
 type AccessKeyObservation struct {
 
-	// The access key ID.
+	// (String) Description for the access key (max 256 characters).
+	// Description for the access key (max 256 characters).
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (String) The ID of this resource.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
-	// The policy to attach to the access key. Can be a policy name, a JSON document, or the contents of a file (e.g., file("path/to/policy.json")).
+	// (String) Policy to attach to the access key (policy name or JSON document).
 	// Policy to attach to the access key (policy name or JSON document).
 	Policy *string `json:"policy,omitempty" tf:"policy,omitempty"`
 
-	// The status of the access key (enabled or disabled). Defaults to enabled.
+	// (String) Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
+	// Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
+	SecretKeyVersion *string `json:"secretKeyVersion,omitempty" tf:"secret_key_version,omitempty"`
+
+	// (String) The status of the access key (enabled/disabled).
 	// The status of the access key (enabled/disabled).
 	Status *string `json:"status,omitempty" tf:"status,omitempty"`
 
-	// The MinIO user for whom the access key is managed.
+	// (String) The user for whom the access key is managed.
 	// The user for whom the access key is managed.
 	User *string `json:"user,omitempty" tf:"user,omitempty"`
 }
 
 type AccessKeyParameters struct {
 
-	// The access key value. If omitted, MinIO generates one. Must be 8-20 characters when specified.
+	// (String) The access key. If provided, must be between 8 and 20 characters.
 	// The access key. If provided, must be between 8 and 20 characters.
 	// +kubebuilder:validation:Optional
 	AccessKeySecretRef *v1.SecretKeySelector `json:"accessKeySecretRef,omitempty" tf:"-"`
 
-	// The policy to attach to the access key. Can be a policy name, a JSON document, or the contents of a file (e.g., file("path/to/policy.json")).
+	// (String) Description for the access key (max 256 characters).
+	// Description for the access key (max 256 characters).
+	// +kubebuilder:validation:Optional
+	Description *string `json:"description,omitempty" tf:"description,omitempty"`
+
+	// (String) Policy to attach to the access key (policy name or JSON document).
 	// Policy to attach to the access key (policy name or JSON document).
 	// +kubebuilder:validation:Optional
 	Policy *string `json:"policy,omitempty" tf:"policy,omitempty"`
 
-	// The secret key value. If omitted, MinIO generates one. Must be at least 8 characters when specified.
-	// The secret key. If provided, must be at least 8 characters.
+	// only field and will not be stored in state.
+	// The secret key. If provided, must be at least 8 characters. This is a write-only field and will not be stored in state.
 	// +kubebuilder:validation:Optional
 	SecretKeySecretRef *v1.SecretKeySelector `json:"secretKeySecretRef,omitempty" tf:"-"`
 
-	// The status of the access key (enabled or disabled). Defaults to enabled.
+	// (String) Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
+	// Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
+	// +kubebuilder:validation:Optional
+	SecretKeyVersion *string `json:"secretKeyVersion,omitempty" tf:"secret_key_version,omitempty"`
+
+	// (String) The status of the access key (enabled/disabled).
 	// The status of the access key (enabled/disabled).
 	// +kubebuilder:validation:Optional
 	Status *string `json:"status,omitempty" tf:"status,omitempty"`
 
-	// The MinIO user for whom the access key is managed.
+	// (String) The user for whom the access key is managed.
 	// The user for whom the access key is managed.
 	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/cluster/iam/v1alpha1.User
 	// +crossplane:generate:reference:refFieldName=UserRef

@@ -22,6 +22,7 @@ resources:
                 {
                   "access_key": "MINIO_ACCESS_KEY",
                   "secret_key": "mySuperSecretKey",
+                  "secret_key_version": "v1",
                   "status": "enabled",
                   "user": "${minio_iam_user.example_user.name}"
                 }
@@ -45,12 +46,26 @@ resources:
                     {
                       "name": "example-user"
                     }
+            - name: with_description
+              manifest: |-
+                {
+                  "description": "CI/CD deployment key",
+                  "user": "${minio_iam_user.example_user.name}"
+                }
+              references:
+                user: minio_iam_user.example_user.name
+              dependencies:
+                minio_iam_user.example_user: |-
+                    {
+                      "name": "example-user"
+                    }
             - name: with_policy
               manifest: |-
                 {
                   "access_key": "EXAMPLEKEY1",
-                  "policy": "${file(\"path/to/policy.json\")}",
+                  "policy": "${jsonencode({\n    Version = \"2012-10-17\"\n    Statement = [\n      {\n        Effect   = \"Allow\"\n        Action   = [\"s3:GetObject\"]\n        Resource = [\"arn:aws:s3:::my-bucket/*\"]\n      }\n    ]\n  })}",
                   "secret_key": "mySuperSecretKey",
+                  "secret_key_version": "v1",
                   "status": "enabled",
                   "user": "${minio_iam_user.example_user.name}"
                 }
@@ -61,18 +76,80 @@ resources:
                     {
                       "name": "example-user"
                     }
+            - name: example
+              manifest: |-
+                {
+                  "secret_key": "${data.vault_kv_secret_v2.minio_secret.data[\"secret_key\"]}",
+                  "secret_key_version": "${tostring(data.vault_kv_secret_v2.minio_secret.version)}",
+                  "user": "${minio_iam_user.example_user.name}"
+                }
+              references:
+                secret_key: data.vault_kv_secret_v2.minio_secret.data["secret_key"]
+                user: minio_iam_user.example_user.name
+            - name: example
+              manifest: |-
+                {
+                  "secret_key": "${var.secret_key}",
+                  "secret_key_version": "${sha256(var.secret_key)}",
+                  "user": "${minio_iam_user.example_user.name}"
+                }
+              references:
+                secret_key: var.secret_key
+                user: minio_iam_user.example_user.name
         argumentDocs:
-            access_key: (Optional) - The access key value. If omitted, MinIO generates one. Must be 8-20 characters when specified.
-            create: '- (Default 5 minutes) How long to wait for an access key to be created.'
-            delete: '- (Default 5 minutes) How long to wait for an access key to be deleted.'
-            id: '- The access key ID.'
-            policy: (Optional) - The policy to attach to the access key. Can be a policy name, a JSON document, or the contents of a file (e.g., file("path/to/policy.json")).
-            read: '- (Default 2 minutes) How long to wait for an access key to be read.'
-            secret_key: (Optional) - The secret key value. If omitted, MinIO generates one. Must be at least 8 characters when specified.
-            status: (Optional) - The status of the access key (enabled or disabled). Defaults to enabled.
-            update: '- (Default 5 minutes) How long to wait for an access key to be updated.'
-            user: (Required) - The MinIO user for whom the access key is managed.
-        importStatements: []
+            access_key: (String) The access key. If provided, must be between 8 and 20 characters.
+            create: (String)
+            delete: (String)
+            description: (String) Description for the access key (max 256 characters).
+            id: (String) The ID of this resource.
+            policy: (String) Policy to attach to the access key (policy name or JSON document).
+            read: (String)
+            secret_key: (String, Sensitive) The secret key. If provided, must be at least 8 characters. This is a write-only field and will not be stored in state.
+            secret_key_version: (String) Version identifier for the secret key. Change this value to trigger a secret key rotation. Can be a hash, version number, timestamp, or any string that changes when the secret changes.
+            status: (String) The status of the access key (enabled/disabled).
+            timeouts: (Block, Optional) (see below for nested schema)
+            update: (String)
+            user: (String) The user for whom the access key is managed.
+        importStatements:
+            - |-
+              # Access keys can be imported using the access key ID
+              terraform import minio_accesskey.example AKIAIOSFODNN7EXAMPLE
+    minio_config:
+        subCategory: ""
+        name: minio_config
+        title: minio_config Resource - terraform-provider-minio
+        examples:
+            - name: region
+              manifest: |-
+                {
+                  "key": "region",
+                  "value": "name=us-west-1"
+                }
+            - name: api_settings
+              manifest: |-
+                {
+                  "key": "api",
+                  "value": "requests_max=1000 requests_deadline=10s"
+                }
+        argumentDocs:
+            api: '— API request throttling and root access control. Example: requests_max=1000 requests_deadline=10s'
+            create: (String)
+            delete: (String)
+            id: (String) The ID of this resource.
+            key: (String) The configuration key (e.g., 'api', 'notify_webhook:1', 'region')
+            notify_kafka:<target>: '— Example: brokers=host1:9092,host2:9092 topic=events'
+            notify_redis:<target>: '— Example: address=127.0.0.1:6379 format=namespace'
+            notify_webhook:<target>: '— Example: endpoint=https://webhook.example.com queue_limit=1000'
+            read: (String)
+            region: '— Region name. Example: name=us-west-1'
+            restart_required: attribute indicates when this is necessary.
+            timeouts: (Block, Optional) (see below for nested schema)
+            update: (String)
+            value: attribute to the full string returned by MinIO. Specify only the keys you want to manage; the diff is suppressed as long as your specified keys match the server response.
+        importStatements:
+            - |-
+              # MinIO configurations can be imported using the config key
+              terraform import minio_config.example config-key
     minio_iam_group:
         subCategory: ""
         name: minio_iam_group
@@ -89,7 +166,10 @@ resources:
             group_name: (String) The name of the group.
             id: (String) The ID of this resource.
             name: (String) Name of the group
-        importStatements: []
+        importStatements:
+            - |-
+              # IAM groups can be imported using the group name
+              terraform import minio_iam_group.example group-name
     minio_iam_group_membership:
         subCategory: ""
         name: minio_iam_group_membership
@@ -125,7 +205,10 @@ resources:
             id: (String) The ID of this resource.
             name: (String) Name of group membership
             users: (Set of String) Add user or list of users such as a group membership
-        importStatements: []
+        importStatements:
+            - |-
+              # IAM group memberships can be imported using the group name
+              terraform import minio_iam_group_membership.example group-name
     minio_iam_group_policy:
         subCategory: ""
         name: minio_iam_group_policy
@@ -149,7 +232,10 @@ resources:
             name: (String) Name of the policy. If omitted, Terraform will assign a random, unique name.
             name_prefix: (String) Prefix to the generated policy name. Do not use with name.
             policy: (String) Policy JSON string
-        importStatements: []
+        importStatements:
+            - |-
+              # IAM group policies can be imported using the group name
+              terraform import minio_iam_group_policy.example group-name
     minio_iam_group_policy_attachment:
         subCategory: ""
         name: minio_iam_group_policy_attachment
@@ -178,7 +264,10 @@ resources:
             group_name: (String) Name of group to attach policy to
             id: (String) The ID of this resource.
             policy_name: (String) Name of policy to attach to group
-        importStatements: []
+        importStatements:
+            - |-
+              # IAM group policy attachments can be imported using the format: group-name/policy-name
+              terraform import minio_iam_group_policy_attachment.example group-name/policy-name
     minio_iam_group_user_attachment:
         subCategory: ""
         name: minio_iam_group_user_attachment
@@ -206,7 +295,10 @@ resources:
             group_name: (String) Name of group to attach user to
             id: (String) The ID of this resource.
             user_name: (String) Name of user
-        importStatements: []
+        importStatements:
+            - |-
+              # IAM group user attachments can be imported using the format: group-name/user-name
+              terraform import minio_iam_group_user_attachment.example group-name/user-name
     minio_iam_ldap_group_policy_attachment:
         subCategory: ""
         description: Attaches LDAP group to a policy. Can be used against both built-in and user-defined policies.
@@ -243,7 +335,8 @@ resources:
             group_dn: (String) The distinguished name (dn) of group to attach policy to
             id: (String) The ID of this resource.
             policy_name: (String) Name of policy to attach to group
-        importStatements: []
+        importStatements:
+            - terraform import minio_iam_ldap_group_policy_attachment.example "cn=developers,ou=groups,dc=example,dc=com/policy-name"
     minio_iam_ldap_user_policy_attachment:
         subCategory: ""
         description: Attaches LDAP user to a policy. Can be used against both built-in and user-defined policies.
@@ -280,7 +373,8 @@ resources:
             id: (String) The ID of this resource.
             policy_name: (String) Name of policy to attach to user
             user_dn: (String) The dn of user to attach policy to
-        importStatements: []
+        importStatements:
+            - terraform import minio_iam_ldap_user_policy_attachment.example "cn=john,ou=users,dc=example,dc=com/policy-name"
     minio_iam_policy:
         subCategory: ""
         name: minio_iam_policy
@@ -297,7 +391,10 @@ resources:
             name: (String) Name of the policy. Conflicts with name_prefix.
             name_prefix: (String) Prefix to the generated policy name. Do not use with name.
             policy: (String) Policy JSON string
-        importStatements: []
+        importStatements:
+            - |-
+              # IAM policies can be imported using the policy name
+              terraform import minio_iam_policy.example policy-name
     minio_iam_service_account:
         subCategory: ""
         name: minio_iam_service_account
@@ -323,7 +420,7 @@ resources:
             access_key: (String) access key of service account
             description: (String) Description of service account (256 bytes max), can't be cleared once set
             disable_user: (Boolean) Disable service account
-            expiration: (String) Expiration of service account. Must be between NOW+15min & NOW+365d
+            expiration: (String) Expiration of service account in RFC3339 format. Must be between NOW+15min & NOW+365d. If not set, the service account will not expire.
             id: (String) The ID of this resource.
             name: (String) Name of service account (32 bytes max), can't be cleared once set
             policy: (String) policy of service account as encoded JSON string
@@ -331,7 +428,10 @@ resources:
             status: (String)
             target_user: (String) User the service account will be created for
             update_secret: (Boolean) rotate secret key
-        importStatements: []
+        importStatements:
+            - |-
+              # IAM service accounts can be imported using the access key ID
+              terraform import minio_iam_service_account.example AKIAIOSFODNN7EXAMPLE
     minio_iam_user:
         subCategory: ""
         name: minio_iam_user
@@ -347,15 +447,54 @@ resources:
                   }
                 }
         argumentDocs:
-            disable_user: (Boolean) Disable user access. Defaults to false.
-            force_destroy: (Boolean) Delete user even if it has non-Terraform-managed IAM access keys or group memberships. When true, any group memberships will be removed during deletion even if they cause errors.
-            id: (String) The ID of this resource (same as name).
+            disable_user: (Boolean) Disable user
+            force_destroy: (Boolean) Delete user even if it has non-Terraform-managed IAM access keys
+            id: (String) The ID of this resource.
             name: (String) Name of the user
-            secret: (String, Sensitive) The user's secret key. If not provided, one will be generated. Can be updated.
-            status: (String) Current status of the user (enabled/disabled).
-            tags: (Map of String) Key-value map of tags.
-            update_secret: (Boolean) When true, generates a new secret key for the user. Defaults to false.
-        importStatements: []
+            secret: (String, Sensitive)
+            status: (String)
+            tags: (Map of String)
+            update_secret: (Boolean) Rotate Minio User Secret Key
+        importStatements:
+            - |-
+              # IAM users can be imported using the user name
+              terraform import minio_iam_user.example username
+    minio_iam_user_group_membership:
+        subCategory: ""
+        name: minio_iam_user_group_membership
+        title: minio_iam_user_group_membership Resource - terraform-provider-minio
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "groups": [
+                    "${minio_iam_group.developers.name}",
+                    "${minio_iam_group.admins.name}"
+                  ],
+                  "user": "${minio_iam_user.user.name}"
+                }
+              references:
+                groups: minio_iam_group.developers.name
+                user: minio_iam_user.user.name
+              dependencies:
+                minio_iam_group.admins: |-
+                    {
+                      "name": "admins"
+                    }
+                minio_iam_group.developers: |-
+                    {
+                      "name": "developers"
+                    }
+                minio_iam_user.user: |-
+                    {
+                      "name": "example-user"
+                    }
+        argumentDocs:
+            groups: (Set of String) A list of IAM groups to add the user to
+            id: (String) The ID of this resource.
+            user: (String) The name of the IAM user
+        importStatements:
+            - terraform import minio_iam_user_group_membership.example example-user
     minio_iam_user_policy_attachment:
         subCategory: ""
         name: minio_iam_user_policy_attachment
@@ -384,33 +523,17 @@ resources:
             id: (String) The ID of this resource.
             policy_name: (String) Name of policy to attach to user
             user_name: (String) Name of user
-        importStatements: []
+        importStatements:
+            - |-
+              # IAM user policy attachments can be imported using the format: user-name/policy-name
+              terraform import minio_iam_user_policy_attachment.example user-name/policy-name
     minio_ilm_policy:
         subCategory: ""
         description: minio_ilm_policy handles lifecycle settings for a given minio_s3_bucket.
         name: minio_ilm_policy
         title: minio_ilm_policy Resource - terraform-provider-minio
         examples:
-            - name: bucket-lifecycle-rules
-              manifest: |-
-                {
-                  "bucket": "${minio_s3_bucket.bucket.bucket}",
-                  "rule": [
-                    {
-                      "expiration": "7d",
-                      "id": "expire-7d",
-                      "status": "Enabled"
-                    }
-                  ]
-                }
-              references:
-                bucket: minio_s3_bucket.bucket.bucket
-              dependencies:
-                minio_s3_bucket.bucket: |-
-                    {
-                      "bucket": "bucket"
-                    }
-            - name: comprehensive-rules
+            - name: test_policy
               manifest: |-
                 {
                   "bucket": "${minio_s3_bucket.bucket.bucket}",
@@ -418,34 +541,79 @@ resources:
                     {
                       "expiration": "90d",
                       "filter": "documents/",
-                      "id": "documents",
+                      "id": "rule1",
                       "status": "Enabled",
                       "tags": {
-                        "department": "finance"
-                      },
+                        "environment": "test",
+                        "type": "document"
+                      }
+                    },
+                    {
+                      "filter": "backups/",
+                      "id": "rule2",
+                      "status": "Disabled",
                       "transition": [
                         {
                           "days": "30d",
+                          "storage_class": "GLACIER"
+                        }
+                      ]
+                    },
+                    {
+                      "filter": "archives/",
+                      "id": "rule3",
+                      "transition": [
+                        {
+                          "date": "2025-12-31",
                           "storage_class": "STANDARD_IA"
                         }
                       ]
                     },
                     {
-                      "id": "versioning",
-                      "noncurrent_expiration": [
-                        {
-                          "days": "60d",
-                          "newer_versions": 5
-                        }
-                      ],
+                      "filter": "versioned-data/",
+                      "id": "rule4",
                       "noncurrent_transition": [
                         {
-                          "days": "30d",
+                          "days": "45d",
                           "newer_versions": 3,
                           "storage_class": "GLACIER"
                         }
-                      ],
-                      "status": "Enabled"
+                      ]
+                    },
+                    {
+                      "filter": "old-versions/",
+                      "id": "rule5",
+                      "noncurrent_expiration": [
+                        {
+                          "days": "365d",
+                          "newer_versions": 5
+                        }
+                      ]
+                    },
+                    {
+                      "expiration": "180d",
+                      "filter": "logs/",
+                      "id": "rule6",
+                      "tags": {
+                        "retention": "short-term",
+                        "type": "logs"
+                      },
+                      "transition": [
+                        {
+                          "days": "60d",
+                          "storage_class": "STANDARD_IA"
+                        }
+                      ]
+                    },
+                    {
+                      "expired_object_delete_marker": true,
+                      "filter": "versioned/",
+                      "id": "rule7",
+                      "noncurrent_expiration": [
+                        {
+                          "days": "30d"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -456,28 +624,92 @@ resources:
                     {
                       "bucket": "bucket"
                     }
+            - name: daily_cleanup
+              manifest: |-
+                {
+                  "bucket": "my-bucket",
+                  "rule": [
+                    {
+                      "expiration": "14d",
+                      "filter": "daily/",
+                      "id": "daily_cleanup"
+                    }
+                  ]
+                }
+            - name: weekly_cleanup
+              manifest: |-
+                {
+                  "bucket": "my-bucket",
+                  "rule": [
+                    {
+                      "expiration": "80d",
+                      "filter": "weekly/",
+                      "id": "weekly_cleanup"
+                    }
+                  ]
+                }
+            - name: my_bucket_lifecycle
+              manifest: |-
+                {
+                  "bucket": "my-bucket",
+                  "rule": [
+                    {
+                      "expiration": "14d",
+                      "filter": "daily/",
+                      "id": "daily_cleanup"
+                    },
+                    {
+                      "expiration": "80d",
+                      "filter": "weekly/",
+                      "id": "weekly_cleanup"
+                    }
+                  ]
+                }
         argumentDocs:
-            bucket: (String) The name of the bucket to which this lifecycle policy applies. Must be between 0 and 63 characters.
-            date: (String) Specific date for the transition in "YYYY-MM-DD" format.
-            days: (String) Number of days after which objects should transition, in format "Nd" (e.g., "30d").
-            expiration: (String) When objects should expire. Value must be a duration (e.g., "7d"), date (e.g., "2024-12-31"), or "DeleteMarker".
-            filter: (String) Prefix path filter for the rule.
+            abort_incomplete_multipart_upload: '(Block List, Max: 1) (see below for nested schema)'
+            bucket: (String)
+            date: (String)
+            days: (String)
+            days_after_initiation: (String) Number of days after which incomplete multipart uploads should be aborted, in format 'Nd'.
+            expiration: (String) Value may be duration (5d) or date (1970-01-01) to expire objects
+            expired_object_delete_marker: (Boolean) Whether to delete the delete marker when the object has a single version (i.e., all other versions have been expired by noncurrent_version_expiration_days).
+            filter: (String)
             id: (String) The ID of this resource.
-            newer_versions: (Number) Number of newer versions to retain before transition. Must be non-negative.
-            noncurrent_expiration: '(Block List, Max: 1) Configuration for expiring noncurrent object versions (see below).'
-            noncurrent_transition: '(Block List, Max: 1) Configuration for transitioning noncurrent object versions (see below).'
-            rule: '(Block List, Min: 1) A list of lifecycle rules (see below for nested schema).'
-            status: (String) Status of the rule. Can be either "Enabled" or "Disabled". Defaults to "Enabled".
-            storage_class: (String) The storage class to transition objects to.
-            tags: (Map of String) Key-value pairs of tags to filter objects.
-            transition: '(Block List, Max: 1) Configuration block for transitioning objects to a different storage class (see below).'
+            newer_versions: (Number)
+            noncurrent_expiration: '(Block List, Max: 1) (see below for nested schema)'
+            noncurrent_transition: '(Block List, Max: 1) (see below for nested schema)'
+            rule: '(Block List, Min: 1) (see below for nested schema)'
+            status: (String) Status of the rule. Can be either 'Enabled' or 'Disabled'. Defaults to 'Enabled'.
+            storage_class: (String)
+            tags: (Map of String)
+            transition: '(Block List, Max: 1) (see below for nested schema)'
         importStatements:
-            - terraform import minio_ilm_policy.example bucket-name
-    minio_ilm_tier Resource - terraform-provider-minio:
+            - |-
+              # ILM policies can be imported using the bucket name
+              terraform import minio_ilm_policy.example bucket-name
+    minio_ilm_tier:
         subCategory: ""
         description: minio_ilm_tier handles remote tiers
-        name: minio_ilm_tier Resource - terraform-provider-minio
+        name: minio_ilm_tier
         title: minio_ilm_tier Resource - terraform-provider-minio
+        examples:
+            - name: s3_tier
+              manifest: |-
+                {
+                  "bucket": "remote-tier-bucket",
+                  "endpoint": "s3.amazonaws.com",
+                  "name": "S3TIER",
+                  "prefix": "minio-data/",
+                  "region": "us-east-1",
+                  "s3_config": [
+                    {
+                      "access_key": "AWS_ACCESS_KEY",
+                      "secret_key": "AWS_SECRET_KEY",
+                      "storage_class": "STANDARD_IA"
+                    }
+                  ],
+                  "type": "s3"
+                }
         argumentDocs:
             access_key: (String)
             account_key: (String, Sensitive)
@@ -497,15 +729,27 @@ resources:
             secret_key: (String, Sensitive)
             storage_class: (String)
             type: (String)
-        importStatements: []
-    minio_kms_key Resource - terraform-provider-minio:
+        importStatements:
+            - |-
+              # ILM tiers can be imported using the tier name
+              terraform import minio_ilm_tier.example tier-name
+    minio_kms_key:
         subCategory: ""
-        name: minio_kms_key Resource - terraform-provider-minio
+        name: minio_kms_key
         title: minio_kms_key Resource - terraform-provider-minio
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "key_id": "my-encryption-key"
+                }
         argumentDocs:
             id: (String) The ID of this resource.
             key_id: (String) KMS key ID
-        importStatements: []
+        importStatements:
+            - |-
+              # KMS keys can be imported using the key name
+              terraform import minio_kms_key.example key-name
     minio_s3_bucket:
         subCategory: ""
         name: minio_s3_bucket
@@ -517,21 +761,59 @@ resources:
                   "acl": "public",
                   "bucket": "state-terraform-s3"
                 }
+            - name: temporary_data
+              manifest: |-
+                {
+                  "acl": "private",
+                  "bucket": "temporary-data",
+                  "force_destroy": true
+                }
+            - name: data_lake
+              manifest: |-
+                {
+                  "bucket": "my-data-lake",
+                  "tags": {
+                    "CostCenter": "12345",
+                    "Environment": "production",
+                    "Team": "data-engineering"
+                  }
+                }
         argumentDocs:
             acl: '(String) Bucket''s Access Control List (default: private)'
             arn: (String) ARN of the bucket
             bucket: (String) Name of the bucket
             bucket_domain_name: (String) The bucket domain name
             bucket_prefix: (String) Prefix of the bucket
-            force_destroy: '(Boolean) Force destroy the bucket (default: false)'
+            force_destroy: (Boolean) A boolean that indicates all objects (including locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.
             id: (String) The ID of this resource.
             object_locking: '(Boolean) Enable object locking for the bucket (default: false)'
             quota: (Number) Quota of the bucket
-        importStatements: []
-    minio_s3_bucket_notification Resource - terraform-provider-minio:
+            tags: (Map of String) A map of tags to assign to the bucket
+        importStatements:
+            - |-
+              # S3 buckets can be imported using the bucket name
+              terraform import minio_s3_bucket.example bucket-name
+    minio_s3_bucket_notification:
         subCategory: ""
-        name: minio_s3_bucket_notification Resource - terraform-provider-minio
+        name: minio_s3_bucket_notification
         title: minio_s3_bucket_notification Resource - terraform-provider-minio
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "bucket": "my-bucket",
+                  "queue": [
+                    {
+                      "events": [
+                        "s3:ObjectCreated:*"
+                      ],
+                      "filter_prefix": "uploads/",
+                      "filter_suffix": ".jpg",
+                      "id": "notification-queue",
+                      "queue_arn": "arn:minio:sqs::primary:webhook"
+                    }
+                  ]
+                }
         argumentDocs:
             bucket: (String)
             events: (Set of String)
@@ -540,16 +822,29 @@ resources:
             id: (String) The ID of this resource.
             queue: (Block List) (see below for nested schema)
             queue_arn: (String)
-        importStatements: []
-    minio_s3_bucket_policy Resource - terraform-provider-minio:
+        importStatements:
+            - |-
+              # S3 bucket notifications can be imported using the bucket name
+              terraform import minio_s3_bucket_notification.example bucket-name
+    minio_s3_bucket_policy:
         subCategory: ""
-        name: minio_s3_bucket_policy Resource - terraform-provider-minio
+        name: minio_s3_bucket_policy
         title: minio_s3_bucket_policy Resource - terraform-provider-minio
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "bucket": "my-bucket",
+                  "policy": "${jsonencode({\n    Version = \"2012-10-17\"\n    Statement = [\n      {\n        Effect = \"Allow\"\n        Principal = {\n          AWS = [\"*\"]\n        }\n        Action = [\n          \"s3:GetObject\"\n        ]\n        Resource = [\n          \"arn:aws:s3:::my-bucket/*\"\n        ]\n      }\n    ]\n  })}"
+                }
         argumentDocs:
             bucket: (String) Name of the bucket
             id: (String) The ID of this resource.
             policy: (String) Policy JSON string
-        importStatements: []
+        importStatements:
+            - |-
+              # S3 bucket policies can be imported using the bucket name
+              terraform import minio_s3_bucket_policy.example bucket-name
     minio_s3_bucket_replication:
         subCategory: ""
         name: minio_s3_bucket_replication
@@ -683,8 +978,9 @@ resources:
                       "target": [
                         {
                           "access_key": "${minio_iam_service_account.replication_in_a.access_key}",
-                          "bandwidth_limit": "100M",
+                          "bandwidth_limit": "800M",
                           "bucket": "${minio_s3_bucket.my_bucket_in_a.bucket}",
+                          "health_check_period": "2m",
                           "host": "${var.minio_server_a}",
                           "secret_key": "${minio_iam_service_account.replication_in_a.secret_key}",
                           "secure": false
@@ -803,64 +1099,82 @@ resources:
             syncronous: (Boolean) Use synchronous replication.
             tags: (Map of String) Tags which objects must have to be syncronised
             target: '(Block List, Min: 1, Max: 1) Bucket prefix (see below for nested schema)'
-        importStatements: []
+        importStatements:
+            - |-
+              # S3 bucket replications can be imported using the bucket name
+              terraform import minio_s3_bucket_replication.example bucket-name
     minio_s3_bucket_retention:
         subCategory: ""
-        description: Manages object lock retention settings for a MinIO bucket. Object locking enforces Write-Once Read-Many (WORM) immutability to protect versioned objects from deletion.
+        description: 'Manages object lock retention settings for a MinIO bucket. Object locking enforces Write-Once Read-Many (WORM) immutability to protect versioned objects from deletion. Note: Object locking can only be enabled during bucket creation and requires versioning. You cannot enable object locking on an existing bucket. This resource provides compliance with SEC17a-4(f), FINRA 4511(C), and CFTC 1.31(c)-(d) requirements.'
         name: minio_s3_bucket_retention
         title: minio_s3_bucket_retention Resource - terraform-provider-minio
         examples:
-            - name: example
+            - name: test_retention
               manifest: |-
                 {
-                  "bucket": "${minio_s3_bucket.example.bucket}",
-                  "mode": "COMPLIANCE",
-                  "unit": "DAYS",
-                  "validity_period": 30
-                }
-              references:
-                bucket: minio_s3_bucket.example.bucket
-              dependencies:
-                minio_s3_bucket.example: |-
-                    {
-                      "bucket": "my-bucket",
-                      "force_destroy": true,
-                      "object_locking": true
-                    }
-            - name: governance_example
-              manifest: |-
-                {
-                  "bucket": "${minio_s3_bucket.example.bucket}",
+                  "bucket": "${minio_s3_bucket.test_bucket.bucket}",
                   "mode": "GOVERNANCE",
                   "unit": "YEARS",
                   "validity_period": 1
                 }
               references:
-                bucket: minio_s3_bucket.example.bucket
+                bucket: minio_s3_bucket.test_bucket.bucket
+              dependencies:
+                minio_s3_bucket.test_bucket: |-
+                    {
+                      "bucket": "test-retention-bucket",
+                      "force_destroy": true,
+                      "object_locking": true
+                    }
         argumentDocs:
-            COMPLIANCE: ': Prevents any object modification by all users, including the root user, until retention period expires.'
-            GOVERNANCE: ': Prevents object modification by non-privileged users. Users with s3:BypassGovernanceRetention permission can modify objects.'
             bucket: (String) Name of the bucket to configure object locking. The bucket must be created with object locking enabled.
             id: (String) The ID of this resource.
-            mode: '(String) Retention mode for the bucket. Valid values are:'
+            mode: |-
+                (String) Retention mode for the bucket. Valid values are:
+                - GOVERNANCE: Prevents object modification by non-privileged users. Users with s3:BypassGovernanceRetention permission can modify objects.
+                - COMPLIANCE: Prevents any object modification by all users, including the root user, until retention period expires.
             unit: (String) Time unit for the validity period. Valid values are DAYS or YEARS.
             validity_period: (Number) Duration for which objects should be retained under WORM lock, in the specified unit. Must be a positive integer.
         importStatements:
-            - $ terraform import minio_s3_bucket_retention.example my-bucket
-    minio_s3_bucket_server_side_encryption Resource - terraform-provider-minio:
+            - |-
+              # S3 bucket retention configurations can be imported using the bucket name
+              terraform import minio_s3_bucket_retention.example bucket-name
+    minio_s3_bucket_server_side_encryption:
         subCategory: ""
-        name: minio_s3_bucket_server_side_encryption Resource - terraform-provider-minio
+        name: minio_s3_bucket_server_side_encryption
         title: minio_s3_bucket_server_side_encryption Resource - terraform-provider-minio
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "bucket": "my-bucket",
+                  "encryption_type": "aws:kms",
+                  "kms_key_id": "my-kms-key"
+                }
         argumentDocs:
             bucket: (String) Name of the bucket on which to setup server side encryption
             encryption_type: (String) Server side encryption type
             id: (String) The ID of this resource.
             kms_key_id: (String) KMS key id to use for server side encryption
-        importStatements: []
-    minio_s3_bucket_versioning Resource - terraform-provider-minio:
+        importStatements:
+            - |-
+              # S3 bucket server-side encryption configurations can be imported using the bucket name
+              terraform import minio_s3_bucket_server_side_encryption.example bucket-name
+    minio_s3_bucket_versioning:
         subCategory: ""
-        name: minio_s3_bucket_versioning Resource - terraform-provider-minio
+        name: minio_s3_bucket_versioning
         title: minio_s3_bucket_versioning Resource - terraform-provider-minio
+        examples:
+            - name: example
+              manifest: |-
+                {
+                  "bucket": "my-bucket",
+                  "versioning_configuration": [
+                    {
+                      "status": "Enabled"
+                    }
+                  ]
+                }
         argumentDocs:
             bucket: (String) Name of the bucket
             exclude_folders: (Boolean)
@@ -868,7 +1182,10 @@ resources:
             id: (String) The ID of this resource.
             status: (String)
             versioning_configuration: '(Block List, Min: 1, Max: 1) (see below for nested schema)'
-        importStatements: []
+        importStatements:
+            - |-
+              # S3 bucket versioning configurations can be imported using the bucket name
+              terraform import minio_s3_bucket_versioning.example bucket-name
     minio_s3_object:
         subCategory: ""
         name: minio_s3_object
@@ -893,7 +1210,28 @@ resources:
                       "acl": "public",
                       "bucket": "state-terraform-s3"
                     }
+            - name: public_file
+              manifest: |-
+                {
+                  "acl": "public-read",
+                  "bucket_name": "${minio_s3_bucket.state_terraform_s3.bucket}",
+                  "content": "This file is publicly readable.",
+                  "content_type": "text/plain",
+                  "depends_on": [
+                    "${minio_s3_bucket.state_terraform_s3}"
+                  ],
+                  "object_name": "public.txt"
+                }
+              references:
+                bucket_name: minio_s3_bucket.state_terraform_s3.bucket
+              dependencies:
+                minio_s3_bucket.state_terraform_s3: |-
+                    {
+                      "acl": "public",
+                      "bucket": "state-terraform-s3"
+                    }
         argumentDocs:
+            acl: '(String) The canned ACL to apply to the object. Valid values: private, public-read, public-read-write, authenticated-read'
             bucket_name: (String) Name of the bucket
             content: (String) Content of the object as a string. Use only one of content, content_base64, or source
             content_base64: (String) Base64-encoded content of the object. Use only one of content, content_base64, or source
@@ -904,3 +1242,44 @@ resources:
             source: (String) Path to the file that will be uploaded. Use only one of content, content_base64, or source
             version_id: (String) Version ID of the object
         importStatements: []
+    minio_site_replication:
+        subCategory: ""
+        description: Provides a MinIO Site Replication resource. This allows you to configure and manage site replication across multiple MinIO clusters, synchronizing buckets, IAM policies, users, groups, and other configurations.
+        name: minio_site_replication
+        title: minio_site_replication Resource - terraform-provider-minio
+        examples:
+            - name: primary
+              manifest: |-
+                {
+                  "name": "my-cluster-replication",
+                  "site": [
+                    {
+                      "access_key": "minioadmin",
+                      "endpoint": "https://minio1.example.com",
+                      "name": "site1",
+                      "secret_key": "minio123"
+                    },
+                    {
+                      "access_key": "minioadmin",
+                      "endpoint": "https://minio2.example.com",
+                      "name": "site2",
+                      "secret_key": "minio456"
+                    },
+                    {
+                      "access_key": "minioadmin",
+                      "endpoint": "https://minio3.example.com",
+                      "name": "site3",
+                      "secret_key": "minio789"
+                    }
+                  ]
+                }
+        argumentDocs:
+            access_key: '- (Required) Access key for the site. This value is stored in Terraform state but not returned by the MinIO API for security reasons.'
+            enabled: '- (Computed) Whether site replication is enabled.'
+            endpoint: '- (Required) MinIO server endpoint URL.'
+            id: '- The name of the site replication configuration.'
+            name: '- (Required, Forces new resource) Name of the site replication configuration.'
+            secret_key: '- (Required, Sensitive) Secret key for the site. This value is stored in Terraform state but not returned by the MinIO API for security reasons.'
+            site: '- (Required) List of sites to replicate between. Minimum 2 sites required.'
+        importStatements:
+            - terraform import minio_site_replication.primary my-cluster-replication

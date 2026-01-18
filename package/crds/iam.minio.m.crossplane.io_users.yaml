@@ -60,16 +60,16 @@ spec:
                 properties:
                   disableUser:
                     description: |-
-                      (Boolean) Disable user access. Defaults to false.
+                      (Boolean) Disable user
                       Disable user
                     type: boolean
                   forceDestroy:
-                    description: When true, any group memberships will be removed
-                      during deletion even if they cause errors
+                    description: |-
+                      provider-managed iam access keys
+                      delete user even if it has non-provider-managed iam access keys
                     type: boolean
                   secretSecretRef:
-                    description: (String, Sensitive) The user's secret key. If not
-                      provided, one will be generated. Can be updated.
+                    description: (String, Sensitive)
                     properties:
                       key:
                         type: string
@@ -83,12 +83,12 @@ spec:
                   tags:
                     additionalProperties:
                       type: string
-                    description: value map of tags.
+                    description: (Map of String)
                     type: object
                     x-kubernetes-map-type: granular
                   updateSecret:
                     description: |-
-                      (Boolean) When true, generates a new secret key for the user. Defaults to false.
+                      (Boolean) Rotate Minio User Secret Key
                       Rotate Minio User Secret Key
                     type: boolean
                 type: object
@@ -107,16 +107,16 @@ spec:
                 properties:
                   disableUser:
                     description: |-
-                      (Boolean) Disable user access. Defaults to false.
+                      (Boolean) Disable user
                       Disable user
                     type: boolean
                   forceDestroy:
-                    description: When true, any group memberships will be removed
-                      during deletion even if they cause errors
+                    description: |-
+                      provider-managed iam access keys
+                      delete user even if it has non-provider-managed iam access keys
                     type: boolean
                   secretSecretRef:
-                    description: (String, Sensitive) The user's secret key. If not
-                      provided, one will be generated. Can be updated.
+                    description: (String, Sensitive)
                     properties:
                       key:
                         type: string
@@ -130,12 +130,12 @@ spec:
                   tags:
                     additionalProperties:
                       type: string
-                    description: value map of tags.
+                    description: (Map of String)
                     type: object
                     x-kubernetes-map-type: granular
                   updateSecret:
                     description: |-
-                      (Boolean) When true, generates a new secret key for the user. Defaults to false.
+                      (Boolean) Rotate Minio User Secret Key
                       Rotate Minio User Secret Key
                     type: boolean
                 type: object
@@ -204,28 +204,29 @@ spec:
                 properties:
                   disableUser:
                     description: |-
-                      (Boolean) Disable user access. Defaults to false.
+                      (Boolean) Disable user
                       Disable user
                     type: boolean
                   forceDestroy:
-                    description: When true, any group memberships will be removed
-                      during deletion even if they cause errors
+                    description: |-
+                      provider-managed iam access keys
+                      delete user even if it has non-provider-managed iam access keys
                     type: boolean
                   id:
-                    description: (String) The ID of this resource (same as name).
+                    description: (String) The ID of this resource.
                     type: string
                   status:
-                    description: (String) Current status of the user (enabled/disabled).
+                    description: (String)
                     type: string
                   tags:
                     additionalProperties:
                       type: string
-                    description: value map of tags.
+                    description: (Map of String)
                     type: object
                     x-kubernetes-map-type: granular
                   updateSecret:
                     description: |-
-                      (Boolean) When true, generates a new secret key for the user. Defaults to false.
+                      (Boolean) Rotate Minio User Secret Key
                       Rotate Minio User Secret Key
                     type: boolean
                 type: object
