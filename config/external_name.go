@@ -13,6 +13,7 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 	"minio_iam_policy":                 config.IdentifierFromProvider,
 	"minio_iam_user":                   config.NameAsIdentifier,
 	"minio_iam_user_policy_attachment": config.IdentifierFromProvider,
+	"minio_iam_service_account":        config.IdentifierFromProvider,
 	"minio_s3_bucket":                  config.NameAsIdentifier,
 }
 

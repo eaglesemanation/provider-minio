@@ -1,0 +1,10 @@
+apiVersion: iam.minio.m.crossplane.io/v1alpha1
+kind: User
+metadata:
+  name: test-user
+  namespace: crossplane-system
+spec:
+  forProvider: {}
+  providerConfigRef:
+    kind: ProviderConfig
+    name: minio

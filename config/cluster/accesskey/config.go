@@ -8,9 +8,7 @@ func Configure(p *config.Provider) {
 		r.ShortGroup = ""
 		r.Kind = "AccessKey"
 		r.References["user"] = config.Reference{
-			TerraformName:     "minio_iam_user",
-			RefFieldName:      "UserRef",
-			SelectorFieldName: "UserSelector",
+			TerraformName: "minio_iam_user",
 		}
 		if s, ok := r.TerraformResource.Schema["access_key"]; ok {
 			s.Sensitive = true
