@@ -9,10 +9,10 @@ metadata:
   namespace: upbound-system
 spec:
   forProvider:
-    policySelector:
+    policyNameSelector:
       matchLabels:
         testing.upbound.io/example-name: test_policy
-    userSelector:
+    userNameSelector:
       matchLabels:
         testing.upbound.io/example-name: test_user
 

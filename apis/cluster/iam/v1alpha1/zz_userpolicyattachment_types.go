@@ -18,32 +18,28 @@ type UserPolicyAttachmentInitParameters struct {
 	// (String) Name of policy to attach to user
 	// Name of policy to attach to user
 	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/cluster/iam/v1alpha1.Policy
-	// +crossplane:generate:reference:refFieldName=PolicyRef
-	// +crossplane:generate:reference:selectorFieldName=PolicySelector
 	PolicyName *string `json:"policyName,omitempty" tf:"policy_name,omitempty"`
 
 	// Reference to a Policy in iam to populate policyName.
 	// +kubebuilder:validation:Optional
-	PolicyRef *v1.Reference `json:"policyRef,omitempty" tf:"-"`
+	PolicyNameRef *v1.Reference `json:"policyNameRef,omitempty" tf:"-"`
 
 	// Selector for a Policy in iam to populate policyName.
 	// +kubebuilder:validation:Optional
-	PolicySelector *v1.Selector `json:"policySelector,omitempty" tf:"-"`
+	PolicyNameSelector *v1.Selector `json:"policyNameSelector,omitempty" tf:"-"`
 
 	// (String) Name of user
 	// Name of user
 	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/cluster/iam/v1alpha1.User
-	// +crossplane:generate:reference:refFieldName=UserRef
-	// +crossplane:generate:reference:selectorFieldName=UserSelector
 	UserName *string `json:"userName,omitempty" tf:"user_name,omitempty"`
 
 	// Reference to a User in iam to populate userName.
 	// +kubebuilder:validation:Optional
-	UserRef *v1.Reference `json:"userRef,omitempty" tf:"-"`
+	UserNameRef *v1.Reference `json:"userNameRef,omitempty" tf:"-"`
 
 	// Selector for a User in iam to populate userName.
 	// +kubebuilder:validation:Optional
-	UserSelector *v1.Selector `json:"userSelector,omitempty" tf:"-"`
+	UserNameSelector *v1.Selector `json:"userNameSelector,omitempty" tf:"-"`
 }
 
 type UserPolicyAttachmentObservation struct {
@@ -65,34 +61,30 @@ type UserPolicyAttachmentParameters struct {
 	// (String) Name of policy to attach to user
 	// Name of policy to attach to user
 	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/cluster/iam/v1alpha1.Policy
-	// +crossplane:generate:reference:refFieldName=PolicyRef
-	// +crossplane:generate:reference:selectorFieldName=PolicySelector
 	// +kubebuilder:validation:Optional
 	PolicyName *string `json:"policyName,omitempty" tf:"policy_name,omitempty"`
 
 	// Reference to a Policy in iam to populate policyName.
 	// +kubebuilder:validation:Optional
-	PolicyRef *v1.Reference `json:"policyRef,omitempty" tf:"-"`
+	PolicyNameRef *v1.Reference `json:"policyNameRef,omitempty" tf:"-"`
 
 	// Selector for a Policy in iam to populate policyName.
 	// +kubebuilder:validation:Optional
-	PolicySelector *v1.Selector `json:"policySelector,omitempty" tf:"-"`
+	PolicyNameSelector *v1.Selector `json:"policyNameSelector,omitempty" tf:"-"`
 
 	// (String) Name of user
 	// Name of user
 	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/cluster/iam/v1alpha1.User
-	// +crossplane:generate:reference:refFieldName=UserRef
-	// +crossplane:generate:reference:selectorFieldName=UserSelector
 	// +kubebuilder:validation:Optional
 	UserName *string `json:"userName,omitempty" tf:"user_name,omitempty"`
 
 	// Reference to a User in iam to populate userName.
 	// +kubebuilder:validation:Optional
-	UserRef *v1.Reference `json:"userRef,omitempty" tf:"-"`
+	UserNameRef *v1.Reference `json:"userNameRef,omitempty" tf:"-"`
 
 	// Selector for a User in iam to populate userName.
 	// +kubebuilder:validation:Optional
-	UserSelector *v1.Selector `json:"userSelector,omitempty" tf:"-"`
+	UserNameSelector *v1.Selector `json:"userNameSelector,omitempty" tf:"-"`
 }
 
 // UserPolicyAttachmentSpec defines the desired state of UserPolicyAttachment

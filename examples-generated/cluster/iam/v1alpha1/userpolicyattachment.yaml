@@ -8,10 +8,10 @@ metadata:
   name: developer
 spec:
   forProvider:
-    policySelector:
+    policyNameSelector:
       matchLabels:
         testing.upbound.io/example-name: test_policy
-    userSelector:
+    userNameSelector:
       matchLabels:
         testing.upbound.io/example-name: test_user
 

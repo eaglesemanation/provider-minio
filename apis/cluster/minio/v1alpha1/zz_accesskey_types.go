@@ -42,8 +42,6 @@ type AccessKeyInitParameters struct {
 	// (String) The user for whom the access key is managed.
 	// The user for whom the access key is managed.
 	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/cluster/iam/v1alpha1.User
-	// +crossplane:generate:reference:refFieldName=UserRef
-	// +crossplane:generate:reference:selectorFieldName=UserSelector
 	User *string `json:"user,omitempty" tf:"user,omitempty"`
 
 	// Reference to a User in iam to populate user.
@@ -116,8 +114,6 @@ type AccessKeyParameters struct {
 	// (String) The user for whom the access key is managed.
 	// The user for whom the access key is managed.
 	// +crossplane:generate:reference:type=github.com/eaglesemanation/provider-minio/apis/cluster/iam/v1alpha1.User
-	// +crossplane:generate:reference:refFieldName=UserRef
-	// +crossplane:generate:reference:selectorFieldName=UserSelector
 	// +kubebuilder:validation:Optional
 	User *string `json:"user,omitempty" tf:"user,omitempty"`
 

@@ -10,6 +10,7 @@ import (
 	"github.com/crossplane/upjet/v2/pkg/controller"
 
 	policy "github.com/eaglesemanation/provider-minio/internal/controller/cluster/iam/policy"
+	serviceaccount "github.com/eaglesemanation/provider-minio/internal/controller/cluster/iam/serviceaccount"
 	user "github.com/eaglesemanation/provider-minio/internal/controller/cluster/iam/user"
 	userpolicyattachment "github.com/eaglesemanation/provider-minio/internal/controller/cluster/iam/userpolicyattachment"
 	accesskey "github.com/eaglesemanation/provider-minio/internal/controller/cluster/minio/accesskey"
@@ -22,6 +23,7 @@ import (
 func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
 		policy.Setup,
+		serviceaccount.Setup,
 		user.Setup,
 		userpolicyattachment.Setup,
 		accesskey.Setup,
@@ -40,6 +42,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
 		policy.SetupGated,
+		serviceaccount.SetupGated,
 		user.SetupGated,
 		userpolicyattachment.SetupGated,
 		accesskey.SetupGated,

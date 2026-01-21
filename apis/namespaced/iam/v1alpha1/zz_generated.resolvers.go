@@ -13,6 +13,50 @@ import (
 	client "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+// ResolveReferences of this ServiceAccount.
+func (mg *ServiceAccount) ResolveReferences(ctx context.Context, c client.Reader) error {
+	r := reference.NewAPINamespacedResolver(c, mg)
+
+	var rsp reference.NamespacedResolutionResponse
+	var err error
+
+	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.TargetUser),
+		Extract:      reference.ExternalName(),
+		Namespace:    mg.GetNamespace(),
+		Reference:    mg.Spec.ForProvider.TargetUserRef,
+		Selector:     mg.Spec.ForProvider.TargetUserSelector,
+		To: reference.To{
+			List:    &UserList{},
+			Managed: &User{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.ForProvider.TargetUser")
+	}
+	mg.Spec.ForProvider.TargetUser = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.ForProvider.TargetUserRef = rsp.ResolvedReference
+
+	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
+		CurrentValue: reference.FromPtrValue(mg.Spec.InitProvider.TargetUser),
+		Extract:      reference.ExternalName(),
+		Namespace:    mg.GetNamespace(),
+		Reference:    mg.Spec.InitProvider.TargetUserRef,
+		Selector:     mg.Spec.InitProvider.TargetUserSelector,
+		To: reference.To{
+			List:    &UserList{},
+			Managed: &User{},
+		},
+	})
+	if err != nil {
+		return errors.Wrap(err, "mg.Spec.InitProvider.TargetUser")
+	}
+	mg.Spec.InitProvider.TargetUser = reference.ToPtrValue(rsp.ResolvedValue)
+	mg.Spec.InitProvider.TargetUserRef = rsp.ResolvedReference
+
+	return nil
+}
+
 // ResolveReferences of this UserPolicyAttachment.
 func (mg *UserPolicyAttachment) ResolveReferences(ctx context.Context, c client.Reader) error {
 	r := reference.NewAPINamespacedResolver(c, mg)
@@ -24,8 +68,8 @@ func (mg *UserPolicyAttachment) ResolveReferences(ctx context.Context, c client.
 		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.PolicyName),
 		Extract:      reference.ExternalName(),
 		Namespace:    mg.GetNamespace(),
-		Reference:    mg.Spec.ForProvider.PolicyRef,
-		Selector:     mg.Spec.ForProvider.PolicySelector,
+		Reference:    mg.Spec.ForProvider.PolicyNameRef,
+		Selector:     mg.Spec.ForProvider.PolicyNameSelector,
 		To: reference.To{
 			List:    &PolicyList{},
 			Managed: &Policy{},
@@ -35,14 +79,14 @@ func (mg *UserPolicyAttachment) ResolveReferences(ctx context.Context, c client.
 		return errors.Wrap(err, "mg.Spec.ForProvider.PolicyName")
 	}
 	mg.Spec.ForProvider.PolicyName = reference.ToPtrValue(rsp.ResolvedValue)
-	mg.Spec.ForProvider.PolicyRef = rsp.ResolvedReference
+	mg.Spec.ForProvider.PolicyNameRef = rsp.ResolvedReference
 
 	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
 		CurrentValue: reference.FromPtrValue(mg.Spec.ForProvider.UserName),
 		Extract:      reference.ExternalName(),
 		Namespace:    mg.GetNamespace(),
-		Reference:    mg.Spec.ForProvider.UserRef,
-		Selector:     mg.Spec.ForProvider.UserSelector,
+		Reference:    mg.Spec.ForProvider.UserNameRef,
+		Selector:     mg.Spec.ForProvider.UserNameSelector,
 		To: reference.To{
 			List:    &UserList{},
 			Managed: &User{},
@@ -52,14 +96,14 @@ func (mg *UserPolicyAttachment) ResolveReferences(ctx context.Context, c client.
 		return errors.Wrap(err, "mg.Spec.ForProvider.UserName")
 	}
 	mg.Spec.ForProvider.UserName = reference.ToPtrValue(rsp.ResolvedValue)
-	mg.Spec.ForProvider.UserRef = rsp.ResolvedReference
+	mg.Spec.ForProvider.UserNameRef = rsp.ResolvedReference
 
 	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
 		CurrentValue: reference.FromPtrValue(mg.Spec.InitProvider.PolicyName),
 		Extract:      reference.ExternalName(),
 		Namespace:    mg.GetNamespace(),
-		Reference:    mg.Spec.InitProvider.PolicyRef,
-		Selector:     mg.Spec.InitProvider.PolicySelector,
+		Reference:    mg.Spec.InitProvider.PolicyNameRef,
+		Selector:     mg.Spec.InitProvider.PolicyNameSelector,
 		To: reference.To{
 			List:    &PolicyList{},
 			Managed: &Policy{},
@@ -69,14 +113,14 @@ func (mg *UserPolicyAttachment) ResolveReferences(ctx context.Context, c client.
 		return errors.Wrap(err, "mg.Spec.InitProvider.PolicyName")
 	}
 	mg.Spec.InitProvider.PolicyName = reference.ToPtrValue(rsp.ResolvedValue)
-	mg.Spec.InitProvider.PolicyRef = rsp.ResolvedReference
+	mg.Spec.InitProvider.PolicyNameRef = rsp.ResolvedReference
 
 	rsp, err = r.Resolve(ctx, reference.NamespacedResolutionRequest{
 		CurrentValue: reference.FromPtrValue(mg.Spec.InitProvider.UserName),
 		Extract:      reference.ExternalName(),
 		Namespace:    mg.GetNamespace(),
-		Reference:    mg.Spec.InitProvider.UserRef,
-		Selector:     mg.Spec.InitProvider.UserSelector,
+		Reference:    mg.Spec.InitProvider.UserNameRef,
+		Selector:     mg.Spec.InitProvider.UserNameSelector,
 		To: reference.To{
 			List:    &UserList{},
 			Managed: &User{},
@@ -86,7 +130,7 @@ func (mg *UserPolicyAttachment) ResolveReferences(ctx context.Context, c client.
 		return errors.Wrap(err, "mg.Spec.InitProvider.UserName")
 	}
 	mg.Spec.InitProvider.UserName = reference.ToPtrValue(rsp.ResolvedValue)
-	mg.Spec.InitProvider.UserRef = rsp.ResolvedReference
+	mg.Spec.InitProvider.UserNameRef = rsp.ResolvedReference
 
 	return nil
 }

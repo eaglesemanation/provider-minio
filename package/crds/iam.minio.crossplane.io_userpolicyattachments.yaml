@@ -78,7 +78,7 @@ spec:
                       (String) Name of policy to attach to user
                       Name of policy to attach to user
                     type: string
-                  policyRef:
+                  policyNameRef:
                     description: Reference to a Policy in iam to populate policyName.
                     properties:
                       name:
@@ -112,7 +112,7 @@ spec:
                     required:
                     - name
                     type: object
-                  policySelector:
+                  policyNameSelector:
                     description: Selector for a Policy in iam to populate policyName.
                     properties:
                       matchControllerRef:
@@ -157,7 +157,7 @@ spec:
                       (String) Name of user
                       Name of user
                     type: string
-                  userRef:
+                  userNameRef:
                     description: Reference to a User in iam to populate userName.
                     properties:
                       name:
@@ -191,7 +191,7 @@ spec:
                     required:
                     - name
                     type: object
-                  userSelector:
+                  userNameSelector:
                     description: Selector for a User in iam to populate userName.
                     properties:
                       matchControllerRef:
@@ -250,7 +250,7 @@ spec:
                       (String) Name of policy to attach to user
                       Name of policy to attach to user
                     type: string
-                  policyRef:
+                  policyNameRef:
                     description: Reference to a Policy in iam to populate policyName.
                     properties:
                       name:
@@ -284,7 +284,7 @@ spec:
                     required:
                     - name
                     type: object
-                  policySelector:
+                  policyNameSelector:
                     description: Selector for a Policy in iam to populate policyName.
                     properties:
                       matchControllerRef:
@@ -329,7 +329,7 @@ spec:
                       (String) Name of user
                       Name of user
                     type: string
-                  userRef:
+                  userNameRef:
                     description: Reference to a User in iam to populate userName.
                     properties:
                       name:
@@ -363,7 +363,7 @@ spec:
                     required:
                     - name
                     type: object
-                  userSelector:
+                  userNameSelector:
                     description: Selector for a User in iam to populate userName.
                     properties:
                       matchControllerRef:
