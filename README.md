@@ -7,13 +7,7 @@ MinIO API.
 
 ## Getting Started
 
-Install the provider by using the following command after changing the image tag
-to the [latest release](https://marketplace.upbound.io/providers/eaglesemanation/provider-minio):
-```
-crossplane xpkg install provider xpkg.crossplane.io/eaglesemanation/provider-minio:v0.2.1
-```
-
-Alternatively, you can use declarative installation:
+Install using declarative installation:
 ```
 cat <<EOF | kubectl apply -f -
 apiVersion: pkg.crossplane.io/v1
@@ -21,13 +15,11 @@ kind: Provider
 metadata:
   name: provider-minio
 spec:
-  package: xpkg.crossplane.io/eaglesemanation/provider-minio:v0.2.1
+  package: ghcr.io/eaglesemanation/provider-minio:v0.2.2
 EOF
 ```
 
-Notice that in this example Provider resource is referencing ControllerConfig with debug enabled.
-
-You can see the API reference [here](https://doc.crds.dev/github.com/eaglesemanation/provider-minio).
+You can see the API reference here: https://doc.crds.dev/github.com/eaglesemanation/provider-minio@v0.2.2
 
 ## Developing
 
